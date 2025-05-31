@@ -1,13 +1,16 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from .models import Product
 from .serializers import ProductSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
+from .filters import ProductFilter
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields = ['have', 'price']
+    filterset_class = ProductFilter
     search_fields = ['product_name']
     ordering_fields = ['price', 'created_date']
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
